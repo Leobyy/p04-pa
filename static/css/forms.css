@@ -1,7 +1,43 @@
 /* Container principal do formulário */
 .form-card {
+    width: 100%;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto; /* Centralização horizontal */
+}
+
+/* Centralização robusta */
+.form-container-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.form-container-center {
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Garante que o formulário fique centralizado independente da sidebar */
+.with-sidebar .form-container-wrapper {
+    margin-left: calc(var(--sidebar-width) * -0.5);
+    width: calc(100% + var(--sidebar-width));
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+    .form-container-wrapper {
+        padding: 10px;
+    }
+    
+    .form-card {
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+/* Container pai para centralização */
+.container.mt-4 {
+    padding: 0 15px;
 }
 
 /* Container de campos */
@@ -76,13 +112,35 @@ textarea.form-control {
 }
 
 /* Checkboxes e radios */
-.form-check {
+/* Estilo específico para campos checkbox */
+.checkbox-field {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.checkbox-field .form-label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-bottom: 0;
+    cursor: pointer;
 }
 
-.form-check-input {
+.checkbox-field input[type="checkbox"] {
     width: auto;
     margin: 0;
+}
+
+.checkbox-label {
+    font-weight: 500;
+    user-select: none;
+}
+
+/* Estilo para checkboxes customizados */
+.form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0;
 }

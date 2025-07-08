@@ -58,4 +58,38 @@
       {% endif %}
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Collapse All
+      document.getElementById('collapse-all').addEventListener('click', function() {
+        document.querySelectorAll('.folder-content').forEach(function(content) {
+            content.classList.add('d-none');
+      });
+        
+        document.querySelectorAll('.folder-toggle i').forEach(function(icon) {
+          icon.classList.remove('bi-folder2-open');
+          icon.classList.add('bi-folder');
+        });
+      });
+    
+    // Toggle individual
+    document.querySelectorAll('.folder-toggle').forEach(function(toggle) {
+      toggle.addEventListener('click', function() {
+        const folderId = this.getAttribute('data-folder');
+        const content = document.getElementById(folderId);
+        const icon = this.querySelector('i');
+            
+        content.classList.toggle('d-none');
+            
+        if (content.classList.contains('d-none')) {
+          icon.classList.remove('bi-folder2-open');
+          icon.classList.add('bi-folder');
+        } else {
+          icon.classList.remove('bi-folder');
+          icon.classList.add('bi-folder2-open');
+        }
+      });
+    });
+});
+</script>
 </div>

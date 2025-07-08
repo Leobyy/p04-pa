@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
 {% block sidebar %}
-    {% include 'campanhas/partials/file_tree.html' with campanha=object %}
+    {% with sidebar_content=True %}
+        {% include 'campanhas/partials/file_tree.html' with campanha=object %}
+    {% endwith %}
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid">
     <h1>{{ object.nome }}</h1>
     <div>
         <a href="{% url 'campanhas:update' object.pk %}" class="btn btn-outline-secondary">

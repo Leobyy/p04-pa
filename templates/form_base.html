@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card shadow form-card">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">
-                <i class="bi {% block form_icon %}bi-pencil-square{% endblock %} me-2"></i>
-                {% block form_title %}Formulário{% endblock %}
-            </h2>
-        </div>
-        
+<div class="form-container-wrapper">
+    <div class="form-container-center">
+        <div class="card shadow form-card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">
+                    <i class="bi {% block form_icon %}bi-pencil-square{% endblock %} me-2"></i>
+                    {% block form_title %}Formulário{% endblock %}
+                </h2>
+            </div>
+
         <div class="card-body">
             {% block form_errors %}
                 {% if form.errors %}
@@ -26,24 +27,22 @@
                 <div class="form-container">
                     {% block form_fields %}
                     {% for field in form %}
-                    <div class="form-field">
+                    <div class="form-field {% if field.field.widget.input_type == 'checkbox' %}checkbox-field{% endif %}">
                         <label for="{{ field.id_for_label }}" class="form-label">
-                            {{ field.label }}
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                {{ field }}
+                                <span class="checkbox-label">{{ field.label }}</span>
+                            {% else %}
+                                {{ field.label }}
+                            {% endif %}
                             {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
                         </label>
                         
-                        {% if field.field.widget.input_type == 'checkbox' %}
-                            <div class="form-check">
-                                {{ field }}
-                                <label class="form-check-label" for="{{ field.id_for_label }}">
-                                    {{ field.help_text|default:field.label }}
-                                </label>
-                            </div>
-                        {% else %}
+                        {% if field.field.widget.input_type != 'checkbox' %}
                             {{ field }}
                         {% endif %}
                         
-                        {% if field.help_text and field.field.widget.input_type != 'checkbox' %}
+                        {% if field.help_text %}
                         <div class="form-text">{{ field.help_text }}</div>
                         {% endif %}
                         

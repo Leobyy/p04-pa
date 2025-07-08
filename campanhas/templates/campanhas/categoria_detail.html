@@ -1,8 +1,10 @@
 {% extends 'base.html' %} {% load static %} 
 
-{% block sidebar %} 
-{% include 'campanhas/partials/file_tree.html' %} 
-{% endblock %} 
+{% block sidebar %}
+    {% with sidebar_content=True %}
+        {% include 'campanhas/partials/file_tree.html' with campanha=object %}
+    {% endwith %}
+{% endblock %}
 
 {% block content %}
 

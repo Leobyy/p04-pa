@@ -21,6 +21,24 @@
         --primary-color: #6f42c1; /* Roxo - cor principal */
         --secondary-color: #20c997; /* Verde - cor secundária */
         --dark-bg: #212529; /* Fundo escuro */
+        --sidebar-width: 0;
+      }
+
+      .with-sidebar {
+            margin-left: 25%;
+            width: 75%;
+      }
+
+      main {
+            transition: margin-left 0.3s;
+            width: 100%;
+      }
+
+      @media (max-width: 992px) {
+            .with-sidebar {
+                margin-left: 0;
+                width: 100%;
+            }
       }
 
       .navbar-custom {
@@ -86,15 +104,13 @@
     </nav>
 
     <div class="container-fluid">
-      <div class="row">
-        <!-- Barra lateral da árvore de arquivos -->
-        {% block sidebar %}{% endblock %}
-
-        <!-- Conteúdo principal -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-          {% block content %}{% endblock %}
-        </main>
-      </div>
+        <div class="row">
+            {% block sidebar %}{% endblock %}
+            
+            <main class="px-md-4 py-4 {% if sidebar_content %}with-sidebar{% endif %}">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
