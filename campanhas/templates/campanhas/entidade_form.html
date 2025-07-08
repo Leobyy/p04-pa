@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Criar Entidade em {{ categoria.nome }}</h1>
+<form method="post">
+  {% csrf_token %}
+
+  <!-- Campo nome fixo -->
+  <div class="mb-3">
+    <label for="id_nome" class="form-label">Nome</label>
+    {{ form.nome }}
+  </div>
+
+  <!-- Campos dinâmicos -->
+  {% for field in form %} {% if field.name != 'nome' %}
+  <div class="mb-3">
+    <label for="{{ field.id_for_label }}" class="form-label"
+      >{{ field.label }}</label
+    >
+    {{ field }}
+  </div>
+  {% endif %} {% endfor %}
+
+  <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
+{% endblock %}

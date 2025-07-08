@@ -1,0 +1,61 @@
+<div class="sidebar col-md-3 col-lg-2 d-md-block bg-dark text-white">
+  <div class="position-sticky">
+    <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+      <h5>Explorador</h5>
+      <button class="btn btn-sm btn-custom" id="collapse-all">
+        <i class="bi bi-arrows-collapse"></i>
+      </button>
+    </div>
+
+    <div class="file-tree">
+      {% if campanha %}
+      <!-- Campanha (raiz) -->
+      <div class="tree-node">
+        <i class="bi bi-folder-fill text-warning"></i>
+        <span class="ms-2 fw-bold">{{ campanha.nome }}</span>
+      </div>
+
+      <ul class="tree-list ps-3">
+        {% for categoria in campanha.categorias.all %}
+        <li>
+          <div
+            class="tree-node folder-toggle"
+            data-folder="cat-{{ categoria.id }}"
+          >
+            <i
+              class="bi {% if categoria.id == object.id %}bi-folder2-open{% else %}bi-folder{% endif %}"
+            ></i>
+            <span class="ms-2">{{ categoria.nome }}</span>
+          </div>
+
+          <ul
+            id="folder-cat-{{ categoria.id }}"
+            class="tree-list ps-3 {% if categoria.id == object.id %}d-block{% else %}d-none{% endif %}"
+          >
+            {% for entidade in categoria.entidades.all %}
+            <li>
+              <div class="tree-node">
+                <i class="bi bi-file-earmark"></i>
+                <a
+                  href="{% url 'campanhas:entidade-detail' entidade.pk %}"
+                  class="ms-2 text-white"
+                >
+                  {{ entidade.nome }}
+                </a>
+              </div>
+            </li>
+            {% empty %}
+            <li class="text-muted small">Nenhuma entidade</li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% empty %}
+        <li class="text-muted small">Nenhuma categoria</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="text-muted">Nenhuma campanha selecionada</div>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Minhas Campanhas</h1>
+
+<a href="{% url 'campanhas:create' %}" class="btn btn-primary mb-3">
+  <i class="bi bi-plus-circle"></i> Nova Campanha
+</a>
+
+{% if campanhas %}
+<div class="list-group">
+  {% for campanha in campanhas %}
+  <a href="{% url 'campanhas:detail' campanha.pk %}" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ campanha.nome }}</h5>
+      <small>Criada em {{ campanha.data_criacao|date:"d/m/Y" }}</small>
+    </div>
+      <p class="mb-1">{{ campanha.prologo|truncatechars:100 }}</p>
+      <a href="{% url 'campanhas:update' campanha.pk %}" class="btn btn-sm btn-outline-secondary" >
+        Editar
+      </a>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+  Você ainda não criou nenhuma campanha. Comece criando sua primeira campanha!
+</div>
+{% endif %} {% endblock %}

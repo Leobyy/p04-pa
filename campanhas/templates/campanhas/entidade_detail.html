@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>{{ entidade.nome }}</h1>
+  <a
+    href="{% url 'campanhas:entidade-create' entidade.categoria.id %}"
+    class="btn btn-primary"
+  >
+    <i class="bi bi-plus-circle"></i> Nova Entidade
+  </a>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">
+    <h2 class="mb-0">{{ entidade.categoria.nome }}</h2>
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Campo</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for campo in campos %}
+        <tr>
+          <td>{{ campo.nome }}</td>
+          <td>
+            {% if campo.tipo == 'Checkbox' %} {% if campo.valor %}✅ Sim{% else
+            %}❌ Não{% endif %} {% else %} {{ campo.valor|default:"-" }} {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="d-flex gap-2">
+  <a
+    href="{% url 'campanhas:entidade-list' entidade.categoria.id %}"
+    class="btn btn-outline-secondary"
+  >
+    <i class="bi bi-list-ul"></i> Ver Todas
+  </a>
+  <a
+    href="{% url 'campanhas:categoria-detail' entidade.categoria.id %}"
+    class="btn btn-secondary"
+  >
+    <i class="bi bi-arrow-left"></i> Voltar para Categoria
+  </a>
+</div>
+{% endblock %}
