@@ -1,40 +1,11 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Adicionar Campo à Categoria</h1>
-<p class="text-muted">Categoria: {{ categoria.nome }}</p>
+{% extends 'form_base.html' %}
 
-<form method="post">
-  {% csrf_token %}
+{% block form_title %}
+    {% if object %}Editar Campo: {{ object.nome }}{% else %}Novo Campo{% endif %}
+{% endblock %}
 
-  <div class="mb-3">
-    <label for="id_nome" class="form-label">Nome do Campo</label>
-    {{ form.nome }} {% if form.nome.errors %}
-    <div class="text-danger">{{ form.nome.errors }}</div>
-    {% endif %}
-  </div>
+{% block form_icon %}bi-input-cursor-text{% endblock %}
 
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <label for="id_tipo" class="form-label">Tipo de Dado</label>
-      {{ form.tipo }} {% if form.tipo.errors %}
-      <div class="text-danger">{{ form.tipo.errors }}</div>
-      {% endif %}
-    </div>
-
-    <div class="col-md-6 mb-3">
-      <div class="form-check mt-4 pt-2">
-        {{ form.obrigatorio }}
-        <label class="form-check-label" for="id_obrigatorio">
-          Campo obrigatório?
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <button type="submit" class="btn btn-primary">Adicionar Campo</button>
-  <a
-    href="{% url 'campanhas:categoria-detail' categoria.pk %}"
-    class="btn btn-secondary"
-    >Cancelar</a
-  >
-</form>
+{% block cancel_url %}
+    {% url 'campanhas:categoria-detail' view.kwargs.categoria_id %}
 {% endblock %}

@@ -1,24 +1,41 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Criar Entidade em {{ categoria.nome }}</h1>
-<form method="post">
-  {% csrf_token %}
+{% extends 'form_base.html' %}
 
-  <!-- Campo nome fixo -->
-  <div class="mb-3">
-    <label for="id_nome" class="form-label">Nome</label>
-    {{ form.nome }}
-  </div>
+{% block form_title %}
+    {% if object %}Editar Entidade: {{ object.nome }}{% else %}Nova Entidade{% endif %}
+{% endblock %}
 
-  <!-- Campos dinâmicos -->
-  {% for field in form %} {% if field.name != 'nome' %}
-  <div class="mb-3">
-    <label for="{{ field.id_for_label }}" class="form-label"
-      >{{ field.label }}</label
-    >
-    {{ field }}
-  </div>
-  {% endif %} {% endfor %}
+{% block form_icon %}bi-file-earmark{% endblock %}
 
-  <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+{% block form_fields %}
+    <div class="col-md-12 mb-3">
+        <label for="id_nome" class="form-label">Nome da Entidade</label>
+        {{ form.nome }}
+    </div>
+    
+    {% for field in form %}
+        {% if field.name != 'nome' %}
+        <div class="col-md-6 mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">
+                {{ field.label }}
+                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+            </label>
+            
+            {{ field }}
+            
+            {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            
+            {% for error in field.errors %}
+            <div class="invalid-feedback d-block">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block cancel_url %}
+    {% if object %}{% url 'campanhas:entidade-detail' object.pk %}{% else %}{% url 'campanhas:categoria-detail' view.kwargs.categoria_id %}{% endif %}
 {% endblock %}

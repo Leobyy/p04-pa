@@ -6,18 +6,31 @@ class CampanhaForm(forms.ModelForm):
         model = Campanha
         fields = ['nome', 'prologo']
         widgets = {
-            'prologo': forms.Textarea(attrs={'rows': 4}),
+            'prologo': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+        }
+        labels = {
+            'nome': 'Nome da Campanha',
+            'prologo': 'Prólogo/Introdução'
         }
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
         fields = ['nome', 'descricao']
+        widgets = {
+            'descricao': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+        }
 
 class CampoForm(forms.ModelForm):
     class Meta:
         model = CampoPersonalizado
         fields = ['nome', 'tipo', 'obrigatorio']
+        widgets = {
+            'tipo': forms.Select(attrs={'class': 'form-select'}),
+        }
+        labels = {
+            'obrigatorio': 'Campo obrigatório?'
+        }
 
 class EntidadeForm(forms.ModelForm):
     class Meta:

@@ -1,29 +1,11 @@
-{% extends 'base.html' %} {% block content %}
-<h1>{% if object %}Editar Categoria{% else %}Nova Categoria{% endif %}</h1>
+{% extends 'form_base.html' %}
 
-<form method="post">
-  {% csrf_token %}
+{% block form_title %}
+    {% if object %}Editar Categoria: {{ object.nome }}{% else %}Nova Categoria{% endif %}
+{% endblock %}
 
-  <div class="mb-3">
-    <label for="id_nome" class="form-label">Nome da Categoria</label>
-    {{ form.nome }} {% if form.nome.errors %}
-    <div class="text-danger">{{ form.nome.errors }}</div>
-    {% endif %}
-  </div>
+{% block form_icon %}bi-folder{% endblock %}
 
-  <div class="mb-3">
-    <label for="id_descricao" class="form-label">Descrição (opcional)</label>
-    {{ form.descricao }} {% if form.descricao.errors %}
-    <div class="text-danger">{{ form.descricao.errors }}</div>
-    {% endif %}
-  </div>
-
-  <button type="submit" class="btn btn-primary">Salvar</button>
-  <a
-    href="{% if object %}{% url 'campanhas:categoria-detail' object.pk %}{% else %}{% url 'campanhas:detail' view.kwargs.campanha_id %}{% endif %}"
-    class="btn btn-secondary"
-  >
-    Cancelar
-  </a>
-</form>
+{% block cancel_url %}
+    {% if object %}{% url 'campanhas:categoria-detail' object.pk %}{% else %}{% url 'campanhas:detail' view.kwargs.campanha_id %}{% endif %}
 {% endblock %}
