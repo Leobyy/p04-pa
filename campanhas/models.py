@@ -38,7 +38,7 @@ class CampoPersonalizado(models.Model):
 
 class Entidade(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='entidades')
-    nome = models.CharField(max_length=100, default="name")
+    nome = models.CharField(max_length=100, default="")
     # Armazena os valores dos campos personalizados
     valores_campos = models.JSONField(encoder=DjangoJSONEncoder, default=dict)
 
