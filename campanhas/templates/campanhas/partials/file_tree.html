@@ -1,13 +1,13 @@
-<div class="sidebar col-md-3 col-lg-2 d-md-block bg-dark text-white">
-  <div class="position-sticky">
-    <div class="d-flex justify-content-between align-items-center mb-3 px-3">
-      <h5>Explorador</h5>
-      <button class="btn btn-sm btn-custom" id="collapse-all">
-        <i class="bi bi-arrows-collapse"></i>
-      </button>
-    </div>
+<div class="sidebar bg-dark text-white" style="width: 250px; position: fixed; top: 70px; bottom: 0; left: 0; z-index: 100; overflow-y: auto;">
+    <div class="position-sticky">
+        <div class="d-flex justify-content-between align-items-center mb-3 px-3 pt-3">
+            <h5>Explorador</h5>
+            <button class="btn btn-sm btn-custom" id="collapse-all">
+                <i class="bi bi-arrows-collapse"></i>
+            </button>
+        </div>
 
-    <div class="file-tree">
+    <div class="file-tree px-3 pb-3">
       {% if campanha %}
       <!-- Campanha (raiz) -->
       <div class="tree-node">
@@ -60,36 +60,56 @@
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Collapse All
-      document.getElementById('collapse-all').addEventListener('click', function() {
-        document.querySelectorAll('.folder-content').forEach(function(content) {
-            content.classList.add('d-none');
-      });
-        
-        document.querySelectorAll('.folder-toggle i').forEach(function(icon) {
-          icon.classList.remove('bi-folder2-open');
-          icon.classList.add('bi-folder');
-        });
-      });
-    
-    // Toggle individual
-    document.querySelectorAll('.folder-toggle').forEach(function(toggle) {
-      toggle.addEventListener('click', function() {
-        const folderId = this.getAttribute('data-folder');
-        const content = document.getElementById(folderId);
-        const icon = this.querySelector('i');
-            
-        content.classList.toggle('d-none');
-            
-        if (content.classList.contains('d-none')) {
-          icon.classList.remove('bi-folder2-open');
-          icon.classList.add('bi-folder');
-        } else {
-          icon.classList.remove('bi-folder');
-          icon.classList.add('bi-folder2-open');
+        // Collapse All
+        const collapseAllBtn = document.getElementById('collapse-all');
+        if (collapseAllBtn) {
+            collapseAllBtn.addEventListener('click', function() {
+                document.querySelectorAll('.folder-content').forEach(content => {
+                    content.classList.add('d-none');
+                });
+                
+                document.querySelectorAll('.folder-toggle i').forEach(icon => {
+                    icon.classList.remove('bi-folder2-open');
+                    icon.classList.add('bi-folder');
+                });
+            });
         }
-      });
+        
+        // Toggle individual
+        document.querySelectorAll('.folder-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const folderId = this.getAttribute('data-folder');
+                const content = document.getElementById('folder-' + folderId);
+                const icon = this.querySelector('i');
+                
+                if (content) {
+                    content.classList.toggle('d-none');
+                    
+                    if (content.classList.contains('d-none')) {
+                        icon.classList.remove('bi-folder2-open');
+                        icon.classList.add('bi-folder');
+                    } else {
+                        icon.classList.remove('bi-folder');
+                        icon.classList.add('bi-folder2-open');
+                    }
+                }
+            });
+        });
+        
+        // Abre automaticamente a categoria atual
+        const currentCategoria = document.querySelector('[data-current-categoria]');
+        if (currentCategoria) {
+            const folderId = currentCategoria.getAttribute('data-current-categoria');
+            const content = document.getElementById('folder-' + folderId);
+            const toggle = document.querySelector(`[data-folder="${folderId}"]`);
+            
+            if (content && toggle) {
+                content.classList.remove('d-none');
+                const icon = toggle.querySelector('i');
+                icon.classList.remove('bi-folder');
+                icon.classList.add('bi-folder2-open');
+            }
+        }
     });
-});
-</script>
+  </script>
 </div>

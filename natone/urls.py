@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from campanhas import views as campanhas_views  # Importação adicionada
+from campanhas import views as campanhas_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,8 +25,8 @@ urlpatterns = [
     
     # URLs de autenticação
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('cadastro/', campanhas_views.CadastroUsuarioView.as_view(), name='cadastro'),  # Usando a view importada
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('cadastro/', campanhas_views.CadastroUsuarioView.as_view(), name='cadastro'),
     
     # Redirecionamento raiz
     path('', auth_views.LoginView.as_view(template_name='login.html')),

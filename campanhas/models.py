@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import timezone
-import json
 
 class Campanha(models.Model):
     mestre = models.ForeignKey(User, on_delete=models.CASCADE)
