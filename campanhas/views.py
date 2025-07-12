@@ -8,7 +8,9 @@ from .models import Campanha, Categoria, CampoPersonalizado, Entidade
 from .forms import CampanhaForm, CategoriaForm, CampoForm, EntidadeForm
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+import csv
+import json
 
 class CadastroUsuarioView(CreateView):
     template_name = 'cadastro.html'
@@ -38,14 +40,12 @@ class CampanhaCreateView(LoginRequiredMixin, CreateView):
         form.instance.mestre = self.request.user
         return super().form_valid(form)
 
-# View para editar campanha
 class CampanhaUpdateView(LoginRequiredMixin, UpdateView):
     model = Campanha
     form_class = CampanhaForm
     template_name = 'campanhas/campanha_form.html'
     success_url = reverse_lazy('campanhas:list')
 
-# View para detalhes da campanha (com categorias)
 class CampanhaDetailView(LoginRequiredMixin, DetailView):
     model = Campanha
     template_name = 'campanhas/campanha_detail.html'
@@ -72,7 +72,6 @@ class CampanhaDeleteView(LoginRequiredMixin, DeleteView):
         messages.success(request, "Campanha deletada com sucesso!")
         return JsonResponse({'success': True})
     
-# View para criar categoria dentro de uma campanha
 class CategoriaCreateView(LoginRequiredMixin, CreateView):
     model = Categoria
     form_class = CategoriaForm
@@ -86,7 +85,6 @@ class CategoriaCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('campanhas:detail', kwargs={'pk': self.kwargs['campanha_id']})
     
-# View para visualizar categoria e seus campos
 class CategoriaDetailView(LoginRequiredMixin, DetailView):
     model = Categoria
     template_name = 'campanhas/categoria_detail.html'
@@ -106,7 +104,6 @@ class CategoriaDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('campanhas:detail', kwargs={'pk': self.object.campanha.pk})
 
-# View para adicionar campos a uma categoria
 class CampoCreateView(LoginRequiredMixin, CreateView):
     model = CampoPersonalizado
     form_class = CampoForm
@@ -160,7 +157,7 @@ class EntidadeDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         entidade = self.get_object()
         
-        # Prepara os campos para exibição
+        
         campos_com_valores = []
         for campo in entidade.categoria.campos.all():
             valor = entidade.get_valor_campo(campo.id)
@@ -173,7 +170,7 @@ class EntidadeDetailView(LoginRequiredMixin, DetailView):
         context['campos'] = campos_com_valores
         return context
     
-# campanhas/views.py
+
 class EntidadeListView(LoginRequiredMixin, ListView):
     model = Entidade
     template_name = 'campanhas/entidade_list.html'
@@ -194,3 +191,81 @@ class EntidadeDeleteView(LoginRequiredMixin, DeleteView):
     
     def get_success_url(self):
         return reverse_lazy('campanhas:categoria-detail', kwargs={'pk': self.object.categoria.pk})
+
+
+def exportar_campanha_csv(request, pk):
+    campanha = Campanha.objects.prefetch_related(
+        Prefetch(
+            'categorias',
+            queryset=Categoria.objects.prefetch_related(
+                'campos',
+                Prefetch(
+                    'entidades',
+                    queryset=Entidade.objects.all().order_by('nome')
+                )
+            )
+        )
+    ).get(pk=pk)
+    
+    # Cria a resposta HTTP com o cabeçalho de arquivo CSV
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': f'attachment; filename="campanha_{campanha.nome}.csv"'},
+    )
+    
+    writer = csv.writer(response, delimiter=';')
+    writer.writerow(['Tipo', 'ID', 'Nome', 'Descrição', 'Relacionamentos', 'Campos Adicionais'])
+    
+    # Exporta a campanha
+    writer.writerow([
+        'CAMPANHA',
+        campanha.id,
+        campanha.nome,
+        campanha.prologo or '',
+        f'Mestre: {campanha.mestre.username}',
+        f'Data Criação: {campanha.data_criacao.strftime("%d/%m/%Y %H:%M")}'
+    ])
+    
+    # Exporta categorias
+    for categoria in campanha.categorias.all():
+        writer.writerow([
+            'CATEGORIA',
+            categoria.id,
+            categoria.nome,
+            categoria.descricao or '',
+            f'Campanha: {campanha.nome}',
+            ''
+        ])
+        
+        # Exporta campos personalizados da categoria
+        for campo in categoria.campos.all():
+            writer.writerow([
+                'CAMPO PERSONALIZADO',
+                campo.id,
+                campo.nome,
+                '',
+                f'Categoria: {categoria.nome}',
+                f'Tipo: {campo.get_tipo_display()}, Obrigatório: {"Sim" if campo.obrigatorio else "Não"}'
+            ])
+        
+        # Exporta entidades da categoria
+        for entidade in categoria.entidades.all():
+            # Formata campos personalizados
+            campos_formatados = []
+            for campo_id, valor in entidade.valores_campos.items():
+                try:
+                    campo = CampoPersonalizado.objects.get(id=int(campo_id))
+                    campos_formatados.append(f"{campo.nome}: {valor}")
+                except (ValueError, CampoPersonalizado.DoesNotExist):
+                    campos_formatados.append(f"Campo ID {campo_id}: {valor}")
+            
+            writer.writerow([
+                'ENTIDADE',
+                entidade.id,
+                entidade.nome,
+                '',
+                f'Categoria: {categoria.nome}',
+                ' | '.join(campos_formatados)
+            ])
+    
+    return response

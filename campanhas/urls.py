@@ -27,4 +27,7 @@ urlpatterns = [
     path('categoria/<int:pk>/delete/', views.CategoriaDeleteView.as_view(), name='categoria-delete'),
     path('campo/<int:pk>/delete/', views.CampoDeleteView.as_view(), name='campo-delete'),
     path('entidade/<int:pk>/delete/', views.EntidadeDeleteView.as_view(), name='entidade-delete'),
+
+    #ExportarCSV
+    path('campanha/<int:pk>/exportar/', views.exportar_campanha_csv, name='campanha-exportar'),
 ]

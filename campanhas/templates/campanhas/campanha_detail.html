@@ -19,6 +19,9 @@
                 <a href="{% url 'campanhas:campanha-delete' campanha.pk %}" class="btn btn-danger ms-2">
                     <i class="bi bi-trash me-1"></i> Excluir Campanha
                 </a>
+                <a href="{% url 'campanhas:campanha-exportar' campanha.pk %}" class="btn btn-info ms-2">
+                    <i class="bi bi-file-earmark-arrow-down me-1"></i> Exportar CSV
+                </a>
             </div>
         </div>
         
