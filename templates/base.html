@@ -65,11 +65,11 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="container-fluid" style="margin-top: 70px;">
         <div class="row">
-            {% block sidebar %}{% endblock %}
+          {% block sidebar %}{% endblock %}
             
-            <main class="main-content {% if sidebar_content %}with-sidebar{% endif %} px-md-4 py-4">
-                {% block content %}{% endblock %}
-            </main>
+          <main class="main-content {% if request.sidebar %}with-sidebar{% endif %} px-md-4 py-4">
+              {% block content %}{% endblock %}
+          </main>
         </div>
     </div>
     
