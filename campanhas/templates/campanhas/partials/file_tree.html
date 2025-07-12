@@ -1,14 +1,12 @@
-<div class="sidebar bg-dark text-white" style="
+<div class="sidebar bg-dark text-white flex-shrink-0" style="
     width: 250px;
-    position: fixed;
-    top: 56px;  <!-- Alterado de 70px para 56px -->
-    bottom: 0;
-    left: 0;
-    z-index: 100;
+    position: sticky;
+    top: 56px; /* Alinhar exatamente abaixo da navbar */
+    height: calc(100vh - 56px); /* Altura total menos a altura da navbar */
     overflow-y: auto;">
     <div class="position-sticky">
         <div class="d-flex justify-content-between align-items-center mb-3 px-3 pt-3">
-            <h5>Explorador</h5>
+            <h5></h5>
             <button class="btn btn-sm btn-custom" id="collapse-all">
                 <i class="bi bi-arrows-collapse"></i>
             </button>

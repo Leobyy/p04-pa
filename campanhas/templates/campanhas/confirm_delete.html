@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4><i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead">Tem certeza que deseja excluir permanentemente?</p>
+            <p class="fw-bold">{{ object }}</p>
+            <p class="text-muted">Esta ação não pode ser desfeita.</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Confirmar Exclusão
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

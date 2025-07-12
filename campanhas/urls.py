@@ -21,4 +21,10 @@ urlpatterns = [
     path('categoria/<int:categoria_id>/entidade/nova/', views.EntidadeCreateView.as_view(), name='entidade-create'),
     path('categoria/<int:categoria_id>/entidades/', views.EntidadeListView.as_view(), name='entidade-list'),
     path('entidade/<int:pk>/', views.EntidadeDetailView.as_view(), name='entidade-detail'),
+
+    #Views de Delete
+    path('campanha/<int:pk>/delete/', views.CampanhaDeleteView.as_view(), name='campanha-delete'),
+    path('categoria/<int:pk>/delete/', views.CategoriaDeleteView.as_view(), name='categoria-delete'),
+    path('campo/<int:pk>/delete/', views.CampoDeleteView.as_view(), name='campo-delete'),
+    path('entidade/<int:pk>/delete/', views.EntidadeDeleteView.as_view(), name='entidade-delete'),
 ]

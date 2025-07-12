@@ -2,9 +2,7 @@
 {% load static %}
 
 {% block sidebar %}
-    {% with sidebar_content=True %}
-        {% include 'campanhas/partials/file_tree.html' with campanha=categoria.campanha %}
-    {% endwith %}
+    {% include 'campanhas/partials/file_tree.html' with campanha=categoria.campanha sidebar_content=True %}
 {% endblock %}
 
 {% block content %}
@@ -16,11 +14,14 @@
         </h1>
         
         <div class="d-flex gap-2">
+            <a href="{% url 'campanhas:entidade-create' categoria.pk %}" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> Nova Entidade
+            </a>
             <a href="{% url 'campanhas:campo-create' categoria.pk %}" class="btn btn-outline-primary">
                 <i class="bi bi-input-cursor-text me-1"></i> Adicionar Campo
             </a>
-            <a href="{% url 'campanhas:entidade-create' categoria.pk %}" class="btn btn-success">
-                <i class="bi bi-plus-circle me-1"></i> Nova Entidade
+            <a href="{% url 'campanhas:categoria-delete' categoria.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash me-1"></i> Excluir Categoria
             </a>
         </div>
     </div>
@@ -36,30 +37,6 @@
     
     <!-- Conteúdo Principal -->
     <div class="row g-4">
-        <!-- Seção de Campos -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header bg-light">
-                    <h3 class="mb-0">
-                        <i class="bi bi-input-cursor-text me-2"></i> Campos Personalizados
-                    </h3>
-                </div>
-                
-                <div class="card-body">
-                    {% if campos %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <!-- ... tabela de campos ... -->
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="alert alert-info mb-0">
-                        Nenhum campo definido ainda.
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
         
         <!-- Seção de Entidades -->
         <div class="col-md-6">
@@ -94,6 +71,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- Seção de Campos -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h3 class="mb-0">
+                        <i class="bi bi-input-cursor-text me-2"></i> Campos Personalizados
+                    </h3>
+                </div>
+                
+                <div class="card-body">
+                    {% if campos %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Tipo</th>
+                                    <th class="text-end">Ações</th> <!-- Nova coluna -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for campo in campos %}
+                                <tr>
+                                    <td>{{ campo.nome }}</td>
+                                    <td>{{ campo.get_tipo_display }}</td>
+                                    <td class="text-end">
+                                        <a href="{% url 'campanhas:campo-delete' campo.pk %}" 
+                                        class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info mb-0">
+                        Nenhum campo definido ainda.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
     
     <!-- Botão Voltar -->

@@ -1,12 +1,14 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 from django.contrib.auth import login
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Campanha, Categoria, CampoPersonalizado, Entidade
 from .forms import CampanhaForm, CategoriaForm, CampoForm, EntidadeForm
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
+from django.http import JsonResponse
 
 class CadastroUsuarioView(CreateView):
     template_name = 'cadastro.html'
@@ -58,6 +60,17 @@ class CampanhaDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['categorias'] = self.object.categorias.all()
         return context
+
+class CampanhaDeleteView(LoginRequiredMixin, DeleteView):
+    model = Campanha
+    template_name ='campanhas/confirm_delete.html'
+    success_url = reverse_lazy('campanhas:list')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(request, "Campanha deletada com sucesso!")
+        return JsonResponse({'success': True})
     
 # View para criar categoria dentro de uma campanha
 class CategoriaCreateView(LoginRequiredMixin, CreateView):
@@ -86,6 +99,13 @@ class CategoriaDetailView(LoginRequiredMixin, DetailView):
         context['entidades'] = self.object.entidades.all()
         return context
 
+class CategoriaDeleteView(LoginRequiredMixin, DeleteView):
+    model = Categoria
+    template_name = 'campanhas/confirm_delete.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('campanhas:detail', kwargs={'pk': self.object.campanha.pk})
+
 # View para adicionar campos a uma categoria
 class CampoCreateView(LoginRequiredMixin, CreateView):
     model = CampoPersonalizado
@@ -104,6 +124,13 @@ class CampoCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('campanhas:categoria-detail', kwargs={'pk': self.kwargs['categoria_id']})
+    
+class CampoDeleteView(LoginRequiredMixin, DeleteView):
+    model = CampoPersonalizado
+    template_name = 'campanhas/confirm_delete.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('campanhas:categoria-detail', kwargs={'pk': self.object.categoria.pk})
     
 class EntidadeCreateView(LoginRequiredMixin, CreateView):
     model = Entidade
@@ -160,3 +187,10 @@ class EntidadeListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['categoria'] = get_object_or_404(Categoria, id=self.kwargs['categoria_id'])
         return context
+    
+class EntidadeDeleteView(LoginRequiredMixin, DeleteView):
+    model = Entidade
+    template_name = 'campanhas/confirm_delete.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('campanhas:categoria-detail', kwargs={'pk': self.object.categoria.pk})

@@ -1,7 +1,7 @@
 
 /* Reset de posicionamento */
 body {
-    padding-top: 70px; /* Altura da navbar */
+    padding-top: 56px; /* Altura da navbar */
 }
 
 /* Sidebar fixa */
@@ -13,7 +13,26 @@ body {
     width: 250px;
     z-index: 100;
     overflow-y: auto;
-    background-color: #2c3e50;
+    background-color: #360453;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.row.flex-nowrap {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap !important;
+}
+
+.with-sidebar {
+    width: calc(100% - 250px);
+    margin-left: 250px;
 }
 
 /* Conteúdo principal */
@@ -24,6 +43,8 @@ body {
     width: calc(100% - 250px);
     min-height: calc(100vh - 70px);
     background-color: #f8f9fa;
+    min-width: 0;
+    flex: 1;
 }
 
 /* Ajuste para quando não há sidebar */

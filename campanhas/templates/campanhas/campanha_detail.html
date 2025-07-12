@@ -8,13 +8,18 @@
 
 {% block content %}
 <div class="main-content with-sidebar">
-    <div class="content-container">
+    <div class="container-fluid" style="padding-right: 10vw;">
         <!-- Cabeçalho da campanha -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>{{ object.nome }}</h1>
-            <a href="{% url 'campanhas:categoria-create' object.pk %}" class="btn btn-success">
-                <i class="bi bi-plus-circle me-1"></i> Nova Categoria
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{% url 'campanhas:categoria-create' object.pk %}" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i> Nova Categoria
+                </a>
+                <a href="{% url 'campanhas:campanha-delete' campanha.pk %}" class="btn btn-danger ms-2">
+                    <i class="bi bi-trash me-1"></i> Excluir Campanha
+                </a>
+            </div>
         </div>
         
         <!-- Prólogo -->
